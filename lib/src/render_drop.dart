@@ -228,6 +228,12 @@ class DropFormatRegistry extends raw.DropContextDelegate {
       final local = target.globalToLocal(event.locationInView);
       final formats = target.formats;
       final session = _session(event);
+      _sessions.putIfAbsent(event.sessionId, () => target!);
+      target.onDropStart?.call(NativeDropEnterEvent(
+          session: session,
+          location: event.locationInView,
+          localLocation: local));
+      if (!target.attached || !_regions.contains(target)) return;
       final items = event.items
           .map((i) => i.readerItem)
           .whereType<clipboard.DataReaderItem>()
@@ -286,6 +292,7 @@ class RenderDropRegionBox extends RenderProxyBoxWithHitTestBehavior {
       required this.readTimeout,
       required super.behavior,
       this.onDropEnter,
+      this.onDropStart,
       this.onDropUpdate,
       this.onDropLeave,
       this.onDropError})
@@ -295,6 +302,7 @@ class RenderDropRegionBox extends RenderProxyBoxWithHitTestBehavior {
   Set<FileFormat> get formats => _formats;
   FutureOr<void> Function(NativeDropEvent) onPerformDrop;
   void Function(NativeDropEnterEvent)? onDropEnter;
+  void Function(NativeDropEnterEvent)? onDropStart;
   FutureOr<raw.DropOperation> Function(NativeDropOverEvent)? onDropUpdate;
   void Function(NativeDropLeaveEvent)? onDropLeave;
   void Function(NativeDropFailure)? onDropError;

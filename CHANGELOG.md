@@ -1,3 +1,8 @@
+# 0.1.1
+
+- Add synchronous onDropStart with the final location before metadata I/O, so
+  editors can track a durable insertion anchor while asynchronous reads run.
+
 # 0.1.0
 
 Extract UniChat's embedded paste_and_drop component into an independent package.

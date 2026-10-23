@@ -32,6 +32,37 @@ Widget positioned(Widget child, {double left = 50, double top = 60}) =>
         ]));
 
 void main() {
+  testWidgets('start freezes final location before awaiting metadata',
+      (tester) async {
+    final context = FakeContext();
+    final pending = Completer<List<NativeData>>();
+    var started = false;
+    final registry = DropFormatRegistry(
+        contextProvider: () async => context,
+        resolver: (items, formats, metadataTimeout, readTimeout) {
+          expect(started, isTrue);
+          return pending.future;
+        });
+    await tester.pumpWidget(positioned(NativeDropRegion(
+        registry: registry,
+        supportedFormats: {const AllowPlainText()},
+        onDropStart: (event) {
+          started = true;
+          expect(event.localLocation, const Offset(75, 60));
+        },
+        onPerformDrop: (_) {},
+        child: const SizedBox.expand())));
+    await registry.ready;
+    await context.delegate!.onDropUpdate(event());
+    final receiving = context.delegate!
+        .onPerformDrop(event(location: const Offset(125, 120)));
+    expect(started, isTrue);
+    pending.complete([textValue()]);
+    await receiving;
+    await tester.pumpWidget(const SizedBox());
+    await registry.ready;
+  });
+
   testWidgets(
       'receives over blank padding and freezes final view/local coordinates',
       (tester) async {

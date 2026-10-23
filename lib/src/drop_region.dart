@@ -15,6 +15,7 @@ class NativeDropRegion extends SingleChildRenderObjectWidget {
       required this.supportedFormats,
       required this.onPerformDrop,
       this.onDropUpdate,
+      this.onDropStart,
       this.onDropEnter,
       this.onDropLeave,
       this.onDropError,
@@ -22,6 +23,10 @@ class NativeDropRegion extends SingleChildRenderObjectWidget {
       this.registry,
       this.metadataTimeout = const Duration(seconds: 10),
       this.readTimeout = const Duration(seconds: 30)});
+
+  /// Synchronous final-position notification before metadata is requested.
+  /// Capture editor anchors here; do not perform I/O in this callback.
+  final void Function(NativeDropEnterEvent event)? onDropStart;
   final Set<FileFormat> supportedFormats;
   final FutureOr<void> Function(NativeDropEvent event) onPerformDrop;
   final FutureOr<DropOperation> Function(NativeDropOverEvent event)?
@@ -42,6 +47,7 @@ class NativeDropRegion extends SingleChildRenderObjectWidget {
           formats: supportedFormats,
           behavior: hitTestBehavior,
           onPerformDrop: onPerformDrop,
+          onDropStart: onDropStart,
           onDropEnter: onDropEnter,
           onDropUpdate: onDropUpdate,
           onDropLeave: onDropLeave,
@@ -58,6 +64,7 @@ class NativeDropRegion extends SingleChildRenderObjectWidget {
     renderObject.updateFormats(supportedFormats);
     renderObject.behavior = hitTestBehavior;
     renderObject.onPerformDrop = onPerformDrop;
+    renderObject.onDropStart = onDropStart;
     renderObject.onDropEnter = onDropEnter;
     renderObject.onDropUpdate = onDropUpdate;
     renderObject.onDropLeave = onDropLeave;

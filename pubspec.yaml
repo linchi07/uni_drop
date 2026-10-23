@@ -1,6 +1,6 @@
 name: uni_drop
 description: Unified native drop and clipboard receiving, extracted from UniChat.
-version: 0.1.0
+version: 0.1.1
 repository: https://github.com/linchi07/uni_drop
 publish_to: none
 

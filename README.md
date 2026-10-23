@@ -65,6 +65,9 @@ screen coordinates. The final location, callback, format set and target are
 captured before metadata I/O. Text caret/paragraph geometry and durable document
 anchors belong to the editor, not this generic receiving package.
 
+`onDropStart` is synchronous and runs at the final accepted location before
+metadata I/O. Capture a document anchor here when asynchronous imports must
+survive concurrent edits. Release it on completion, rejection or drop leave.
 `onDropEnter`, `onDropUpdate`, and `onDropLeave` provide hover feedback.
 The default hit-test behavior also accepts blank child/padding areas.
 Only copy is accepted; move-only sessions are rejected. A child can reject a
