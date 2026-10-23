@@ -1,0 +1,12 @@
+name: uni_drop_example
+description: Inspect received item types and pointer positions.
+publish_to: none
+environment:
+  sdk: '>=3.6.0 <4.0.0'
+dependencies:
+  flutter:
+    sdk: flutter
+  uni_drop:
+    path: ..
+flutter:
+  uses-material-design: true

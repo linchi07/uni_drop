@@ -1,0 +1,9 @@
+include: package:flutter_lints/flutter.yaml
+
+analyzer:
+  exclude:
+    - lib/src/file_semantic_map.g.dart
+
+linter:
+  rules:
+    constant_identifier_names: false
